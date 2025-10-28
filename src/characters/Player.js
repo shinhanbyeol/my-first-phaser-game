@@ -9,6 +9,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     super(scene, Config.width / 2, Config.height / 2, "player");
     scene.add.existing(this);
     scene.physics.add.existing(this);
+    this.m_canBeAttacked = true;
+
+    this.m_hp = 100;
 
     // scale 프로퍼티를 조절해 크기를 조절할 수 있습니다. (디폴트: 1)
     this.scale = 2;
@@ -22,6 +25,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.setBodySize(28, 32);
 
     this.m_moving = false;
+
+    scene.events.on("update", (time, delta) => {
+      this.update(time, delta);
+    });
   }
   move(vector) {
     // console.log(vector);
@@ -30,11 +37,55 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.x = vector[0] * PLAYER_SPEED + this.x;
     this.y = vector[1] * PLAYER_SPEED + this.y;
 
-    
     if (vector[0] < 0) {
-        this.flipX = false
+      this.flipX = false;
     } else if (vector[0] > 0) {
-        this.flipX = true
+      this.flipX = true;
     }
+  }
+
+  update(time, delta) {
+    if (this.m_hp <= 0) {
+      this.scene.scene.stop("PlayingScene");
+      // this.scene.scene.start("GameOverScene");
+      alert("Game Over");
+    } 
+  }
+
+  hitByMob(damage) {
+    if (!this.m_canBeAttacked) return;
+    this.m_hp -= damage;
+    console.log(`Player HP: ${this.m_hp}`);
+
+    // 플레이어가 다친 소리를 재생합니다.
+    this.scene.m_hurtSound.play();
+    // 피격 이펙트를 표시합니다.
+    this.displayHit();
+    // 피격 쿨타임을 시작합니다.
+    this.getCoolDown();
+  }
+
+  displayHit() {
+    this.setTint(0xff0000);
+    this.scene.time.addEvent({
+      delay: 100,
+      callback: () => {
+        this.clearTint();
+      },
+      loop: false,
+    });
+  }
+
+  getCoolDown() {
+    this.m_canBeAttacked = false;
+     this.alpha = 0.5;
+    this.scene.time.addEvent({
+      delay: 500,
+      callback: () => {
+         this.alpha = 1;
+        this.m_canBeAttacked = true;
+      },
+      loop: false,
+    });
   }
 }

@@ -46,6 +46,9 @@ export default class Beam extends Phaser.Physics.Arcade.Sprite {
   }
 
   setAngle() {
+    if (!this.scene.m_closest) {
+      return;
+    }
     const angleToMob = Phaser.Math.Angle.Between(
       this.x,
       this.y,
