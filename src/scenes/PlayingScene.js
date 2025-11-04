@@ -49,7 +49,17 @@ export default class PlayingScene extends Phaser.Scene {
     this.m_weaponDynamic = this.physics.add.group();
     this.m_weaponStatic = this.physics.add.group();
     this.m_attackEvents = {};
-    addAttackEvents(this, "Beam", 1, 1, 800);
+    addAttackEvents(this, "Beam", 5, 1, 800);
+
+    // Items
+    this.m_expUps = this.physics.add.group();
+    this.physics.add.overlap(
+      this.m_player,
+      this.m_expUps,
+      this.pickExpUp,
+      null,
+      this
+    );
 
     /** 몹과 플레이어 및 공격 충돌 이벤트 구현 */
 
@@ -101,6 +111,15 @@ export default class PlayingScene extends Phaser.Scene {
     );
 
     this.m_closest = closest;
+  }
+
+  pickExpUp(player, expUp) {
+    expUp.disableBody(true, true);
+    expUp.destroy();
+
+    this.m_expUpSound.play();
+    player.m_exp += expUp.m_exp;
+    console.log(`Exp +${expUp.m_exp} :${player.m_exp}`);
   }
 
   movePlayerManager() {

@@ -14,9 +14,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.m_canBeAttacked = true;
 
     this.m_hp = 100;
+    this.m_exp = 0;
 
     // scale 프로퍼티를 조절해 크기를 조절할 수 있습니다. (디폴트: 1)
     this.scale = 2;
+    
 
     // depth를 조절해 어떤 오브젝트가 앞에 오고 뒤에 올지 설정할 수 있습니다.
     // CSS의 z-index와 비슷한 개념입니다. (디폴트: 0)
