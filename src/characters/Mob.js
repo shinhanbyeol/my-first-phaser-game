@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import Explosion from "../effects/Explosion";
 
 export default class Mob extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, texture, animKey, initHp, dropRate) {
@@ -65,8 +66,7 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
     }
 
     if (this.m_hp <= 0) {      
-      this.scene.time.removeEvent(this.m_events[0]);
-      this.destroy();
+      this.die();      
     }
   }
 
@@ -118,5 +118,14 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
       },
       loop: false,
     });
+  }
+
+  /** 몹 사망 처리 */
+  die() {
+    new Explosion(this.scene, [this.x, this.y]);
+    this.scene.m_explosionSound.play();
+
+    this.scene.time.removeEvent(this.m_events);
+    this.destroy();
   }
 }

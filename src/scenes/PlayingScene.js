@@ -41,7 +41,7 @@ export default class PlayingScene extends Phaser.Scene {
 
     // Mobs
     this.m_mobs = this.physics.add.group();
-    this.m_mobs.add(new Mob(this, 400, 300, "mob1", "mob1_anim", 10, 0.9));
+    this.m_mobs.add(new Mob(this, 0, 30, "mob1", "mob1_anim", 10, 0.9));
     this.m_mobEvents = [];
     addMobEvents(this, 3000, "mob2", "mob2_anim", 10, 0.9);
 

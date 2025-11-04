@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 import Config from "../Config";
+import HpBar from "../ui/Hpbar";
+import { loseGame } from "../utils/seceneManager";
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene) {
@@ -29,7 +31,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     scene.events.on("update", (time, delta) => {
       this.update(time, delta);
     });
+
+    this.m_hbBar = new HpBar(scene, this, this.m_hp);
   }
+
   move(vector) {
     // console.log(vector);
     let PLAYER_SPEED = 3;
@@ -46,10 +51,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   update(time, delta) {
     if (this.m_hp <= 0) {
-      this.scene.scene.stop("PlayingScene");
-      // this.scene.scene.start("GameOverScene");
-      alert("Game Over");
-    } 
+      loseGame(this.scene);
+    }
   }
 
   hitByMob(damage) {
@@ -63,6 +66,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.displayHit();
     // 피격 쿨타임을 시작합니다.
     this.getCoolDown();
+    // HP bar를 갱신합니다.
+    this.m_hbBar.decrease(damage);
   }
 
   displayHit() {
@@ -78,11 +83,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   getCoolDown() {
     this.m_canBeAttacked = false;
-     this.alpha = 0.5;
+    this.alpha = 0.5;
     this.scene.time.addEvent({
       delay: 500,
       callback: () => {
-         this.alpha = 1;
+        this.alpha = 1;
         this.m_canBeAttacked = true;
       },
       loop: false,
