@@ -7,6 +7,7 @@ import Mob from "../characters/Mob";
 import { setBackground } from "../utils/backgroundManager";
 import { addMobEvents } from "../utils/mobManager";
 import { addAttackEvents } from "../utils/attackManager";
+import { pause } from "../utils/pauseManager";
 
 export default class PlayingScene extends Phaser.Scene {
   constructor() {
@@ -65,7 +66,8 @@ export default class PlayingScene extends Phaser.Scene {
 
     // UI
     this.m_topBar = new TopBar(this);
-    this.m_expBar = new ExpBar(this, 50);
+    this.m_expBar = new ExpBar(this, 50);    
+    
 
     /** 몹과 플레이어 및 공격 충돌 이벤트 구현 */
     // Player와 mob이 부딪혔을 경우 player에 데미지 10을 줍니다.
@@ -101,6 +103,15 @@ export default class PlayingScene extends Phaser.Scene {
       null,
       this
     );
+
+    // Pause key event
+    this.input.keyboard.on(
+      "keydown-ESC",
+      () => {
+        pause(this, "pause");
+      },
+      this
+    );
   }
 
   update() {
@@ -125,11 +136,15 @@ export default class PlayingScene extends Phaser.Scene {
     this.m_expUpSound.play();
     player.m_exp += expUp.m_exp;
 
-    this.m_expBar.increase(expUp.m_exp);    
+    this.m_expBar.increase(expUp.m_exp);
     if (this.m_expBar.m_currentExp >= this.m_expBar.m_maxExp) {
-      this.m_topBar.gainLevel();
-      this.m_nextLevelSound.play();
+      pause(this, "levelup");
     }
+  }
+
+  afterLevelUp() {
+    this.m_topBar.gainLevel();
+    this.m_nextLevelSound.play();
   }
 
   movePlayerManager() {
