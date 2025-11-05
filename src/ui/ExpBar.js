@@ -24,10 +24,7 @@ export default class ExpBar extends Phaser.GameObjects.Graphics {
 
   increase(amount) {
     this.m_currentExp = clamp(this.m_currentExp + amount, 0, this.m_maxExp);
-    
-    if (this.m_currentExp >= this.m_maxExp) {
-      this.scene.m_topBar.gainLevel();      
-    }
+    this.draw();
   }
 
   reset() {
@@ -47,11 +44,8 @@ export default class ExpBar extends Phaser.GameObjects.Graphics {
     this.fillRect(this.m_x + 2, this.m_y + 2, this.WIDTH - 4, this.HEIGHT - 4);
 
     // Draw the current EXP
-    const expWidth =
-      ((this.WIDTH - 4) * this.m_currentExp) / this.m_maxExp;
+    const expWidth = ((this.WIDTH - 4) * this.m_currentExp) / this.m_maxExp;
     this.fillStyle(0x00ff00);
     this.fillRect(this.m_x + 2, this.m_y + 2, expWidth, this.HEIGHT - 4);
-
-    
   }
 }

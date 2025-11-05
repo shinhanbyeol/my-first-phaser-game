@@ -67,9 +67,6 @@ export default class PlayingScene extends Phaser.Scene {
     this.m_topBar = new TopBar(this);
     this.m_expBar = new ExpBar(this, 50);
 
-
-
-
     /** 몹과 플레이어 및 공격 충돌 이벤트 구현 */
     // Player와 mob이 부딪혔을 경우 player에 데미지 10을 줍니다.
     // (Player.js에서 hitByMob 함수 확인)
@@ -127,9 +124,12 @@ export default class PlayingScene extends Phaser.Scene {
 
     this.m_expUpSound.play();
     player.m_exp += expUp.m_exp;
-    
-    this.m_expBar.increase(expUp.m_exp);
-    this.m_expBar.draw();
+
+    this.m_expBar.increase(expUp.m_exp);    
+    if (this.m_expBar.m_currentExp >= this.m_expBar.m_maxExp) {
+      this.m_topBar.gainLevel();
+      this.m_nextLevelSound.play();
+    }
   }
 
   movePlayerManager() {
