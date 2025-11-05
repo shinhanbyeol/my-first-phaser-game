@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 import Config from "../Config";
+import TopBar from "../ui/TopBar";
+import ExpBar from "../ui/ExpBar";
 import Player from "../characters/Player";
 import Mob from "../characters/Mob";
 import { setBackground } from "../utils/backgroundManager";
@@ -61,8 +63,14 @@ export default class PlayingScene extends Phaser.Scene {
       this
     );
 
-    /** 몹과 플레이어 및 공격 충돌 이벤트 구현 */
+    // UI
+    this.m_topBar = new TopBar(this);
+    this.m_expBar = new ExpBar(this, 50);
 
+
+
+
+    /** 몹과 플레이어 및 공격 충돌 이벤트 구현 */
     // Player와 mob이 부딪혔을 경우 player에 데미지 10을 줍니다.
     // (Player.js에서 hitByMob 함수 확인)
     this.physics.add.overlap(
@@ -119,7 +127,9 @@ export default class PlayingScene extends Phaser.Scene {
 
     this.m_expUpSound.play();
     player.m_exp += expUp.m_exp;
-    console.log(`Exp +${expUp.m_exp} :${player.m_exp}`);
+    
+    this.m_expBar.increase(expUp.m_exp);
+    this.m_expBar.draw();
   }
 
   movePlayerManager() {

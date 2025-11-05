@@ -130,8 +130,8 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
       const expUp = new ExpUp(this.scene, this);
       this.scene.m_expUps.add(expUp);
     }
-
+    this.scene.m_topBar.gameMobsKilled();
     this.scene.time.removeEvent(this.m_events);
-    this.destroy();
+    this.destroy();    
   }
 }
