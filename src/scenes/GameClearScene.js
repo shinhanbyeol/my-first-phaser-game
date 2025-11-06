@@ -1,11 +1,12 @@
 import Phaser from "phaser";
 import Config from "../Config";
 import Button from "../ui/Button";
-import { getTimeString } from "../ui/time";
+import { getTimeString } from "../utils/time";
 
-export default class GameOverScene extends Phaser.Scene {
+export default class GameClearScene extends Phaser.Scene {
   constructor() {
-    super("gameOverScene");
+    // scene의 identifier를 설정하는 부분입니다.
+    super("gameClearScene");
   }
 
   init(data) {
@@ -15,23 +16,23 @@ export default class GameOverScene extends Phaser.Scene {
   }
 
   create() {
+    // 배경을 추가해주는 부분입니다.
     const bg = this.add.graphics();
-    bg.fillStyle(0x5c6bc0);
+    bg.fillStyle(0x5abeff);
     bg.fillRect(0, 0, Config.width, Config.height);
     bg.setScrollFactor(0);
 
-    // Game Over 문구는 상단으로 이동시켜줍니다.
+    // 상단 문구를 추가하는 부분입니다.
     this.add
       .bitmapText(
         Config.width / 2,
         Config.height / 2 - 180,
         "pixelFont",
-        "Game Over",
+        "Game Clear !!",
         80
       )
       .setOrigin(0.5);
 
-    // 플레이 시간을 표시해줍니다.
     this.add
       .bitmapText(
         Config.width / 2,
@@ -42,7 +43,6 @@ export default class GameOverScene extends Phaser.Scene {
       )
       .setOrigin(0.5);
 
-    // 잡은 몹 수와 레벨을 표시해줍니다.
     this.add
       .bitmapText(
         Config.width / 2,
@@ -53,7 +53,6 @@ export default class GameOverScene extends Phaser.Scene {
       )
       .setOrigin(0.5);
 
-    // 메인 화면으로 이동하는 버튼을 추가해줍니다.
     new Button(
       Config.width / 2,
       Config.height / 2 + 180,

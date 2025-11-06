@@ -58,7 +58,7 @@ export default class PlayingScene extends Phaser.Scene {
     this.m_weaponDynamic = this.physics.add.group();
     this.m_weaponStatic = this.physics.add.group();
     this.m_attackEvents = {};
-    addAttackEvents(this, "Claw", 10, 2.3, 1500);    
+    addAttackEvents(this, "Claw", 10, 2.3, 1500);
 
     // Items
     this.m_expUps = this.physics.add.group();
@@ -153,7 +153,6 @@ export default class PlayingScene extends Phaser.Scene {
     this.m_topBar.gainLevel();
     this.m_nextLevelSound.play();
     this.m_player.gainHp(20);
-    
 
     switch (this.m_topBar.m_level) {
       case 2:
@@ -168,7 +167,7 @@ export default class PlayingScene extends Phaser.Scene {
         addMobEvents(this, 600, "mob3", "mob3_anim", 25, 0.7);
         setBackground(this, "background3");
         // catnip 공격 추가
-        addAttackEvents(this, "Catnip", 10, 2);        
+        addAttackEvents(this, "Catnip", 10, 2);
         break;
       case 4:
         removeOldestMobEvent(this);
@@ -230,5 +229,16 @@ export default class PlayingScene extends Phaser.Scene {
     this.m_weaponStatic.getChildren().forEach((weapon) => {
       weapon.move(vector);
     }, this);
+  }
+
+  sceneDataReset() {
+    // player 초기화
+    this.m_player.m_hp = this.m_player.m_maxHp;
+    this.m_player.m_exp = 0;
+    this.m_player.setPosition(Config.width / 2, Config.height / 2);
+    // mob 이벤트들 초기화    
+    this.m_mobEvents = [];
+    // 공격 이벤트들 초기화
+    this.m_attackEvents = {};
   }
 }
