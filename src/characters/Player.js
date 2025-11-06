@@ -18,7 +18,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     // scale 프로퍼티를 조절해 크기를 조절할 수 있습니다. (디폴트: 1)
     this.scale = 2;
-    
 
     // depth를 조절해 어떤 오브젝트가 앞에 오고 뒤에 올지 설정할 수 있습니다.
     // CSS의 z-index와 비슷한 개념입니다. (디폴트: 0)
@@ -55,6 +54,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     if (this.m_hp <= 0) {
       loseGame(this.scene);
     }
+  }
+
+  gainHp(amount) {
+    this.m_hp += amount;
+    if (this.m_hp > this.m_maxHp) {
+      this.m_hp = this.m_maxHp;
+    }
+    this.m_hbBar.increase(amount);
   }
 
   hitByMob(damage) {

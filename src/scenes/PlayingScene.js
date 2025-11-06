@@ -6,8 +6,14 @@ import Player from "../characters/Player";
 import Mob from "../characters/Mob";
 import { setBackground } from "../utils/backgroundManager";
 import { addMobEvents, removeOldestMobEvent } from "../utils/mobManager";
-import { addAttackEvents } from "../utils/attackManager";
+import {
+  addAttackEvents,
+  setAttackDamage,
+  setAttackScale,
+  removeAttack,
+} from "../utils/attackManager";
 import { pause } from "../utils/pauseManager";
+import { createTime } from "../ui/time";
 
 export default class PlayingScene extends Phaser.Scene {
   constructor() {
@@ -52,7 +58,7 @@ export default class PlayingScene extends Phaser.Scene {
     this.m_weaponDynamic = this.physics.add.group();
     this.m_weaponStatic = this.physics.add.group();
     this.m_attackEvents = {};
-    addAttackEvents(this, "Beam", 5, 1, 800);
+    addAttackEvents(this, "Claw", 10, 2.3, 1500);    
 
     // Items
     this.m_expUps = this.physics.add.group();
@@ -111,6 +117,8 @@ export default class PlayingScene extends Phaser.Scene {
       },
       this
     );
+
+    createTime(this);
   }
 
   update() {
@@ -144,25 +152,40 @@ export default class PlayingScene extends Phaser.Scene {
   afterLevelUp() {
     this.m_topBar.gainLevel();
     this.m_nextLevelSound.play();
+    this.m_player.gainHp(20);
+    
 
     switch (this.m_topBar.m_level) {
       case 2:
         removeOldestMobEvent(this);
-        addMobEvents(this, 800, "mob2", "mob2_anim", 15, 0.8);
+        addMobEvents(this, 800, "mob2", "mob2_anim", 20, 0.8);
         setBackground(this, "background2");
+        // claw 공격 크기 확대
+        setAttackScale(this, "Claw", 4);
         break;
       case 3:
         removeOldestMobEvent(this);
         addMobEvents(this, 600, "mob3", "mob3_anim", 25, 0.7);
         setBackground(this, "background3");
+        // catnip 공격 추가
+        addAttackEvents(this, "Catnip", 10, 2);        
         break;
       case 4:
         removeOldestMobEvent(this);
         addMobEvents(this, 400, "mob4", "mob4_anim", 40, 0.6);
+        // catnip 공격 크기 확대
+        setAttackScale(this, "Catnip", 3);
         break;
       case 5:
-        removeOldestMobEvent(this);
-        addMobEvents(this, -1, "lion", "lion_anim", 60, 0.5);
+        // claw 공격 삭제
+        removeAttack(this, "Claw");
+        // beam 공격 추가
+        addAttackEvents(this, "Beam", 10, 1, 1000);
+        break;
+      case 6:
+        // beam 공격 크기 및 데미지 확대
+        setAttackScale(this, "Beam", 2);
+        setAttackDamage(this, "Beam", 40);
         break;
       default:
         break;
@@ -202,5 +225,10 @@ export default class PlayingScene extends Phaser.Scene {
       vector[1] += 1;
     }
     this.m_player.move(vector);
+
+    // static 공격들도 플레이어를 따라 움직이도록 합니다.
+    this.m_weaponStatic.getChildren().forEach((weapon) => {
+      weapon.move(vector);
+    }, this);
   }
 }
