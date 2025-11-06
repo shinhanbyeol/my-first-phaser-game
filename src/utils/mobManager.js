@@ -18,6 +18,14 @@ export function addMobEvents(
   mobHealth,
   dropRate
 ) {
+  if (spawnInterval <= 0) {
+    // only once spawn
+    let [x, y] = getRandomPosition(scene.m_player.x, scene.m_player.y);
+    scene.m_mobs.add(
+      new Mob(scene, x, y, mobTexture, mobAnimKey, mobHealth, dropRate)
+    );
+    return;
+  }
   let timer = scene.time.addEvent({
     delay: spawnInterval,
     callback: () => {
@@ -32,8 +40,7 @@ export function addMobEvents(
   scene.m_mobEvents.push(timer);
 }
 
-
 export function removeOldestMobEvent(scene) {
-    scene.m_mobEvents[0].remove();
-    scene.m_mobEvents.shift();
+  scene.m_mobEvents[0].remove();
+  scene.m_mobEvents.shift();
 }

@@ -5,7 +5,7 @@ import ExpBar from "../ui/ExpBar";
 import Player from "../characters/Player";
 import Mob from "../characters/Mob";
 import { setBackground } from "../utils/backgroundManager";
-import { addMobEvents } from "../utils/mobManager";
+import { addMobEvents, removeOldestMobEvent } from "../utils/mobManager";
 import { addAttackEvents } from "../utils/attackManager";
 import { pause } from "../utils/pauseManager";
 
@@ -44,9 +44,9 @@ export default class PlayingScene extends Phaser.Scene {
 
     // Mobs
     this.m_mobs = this.physics.add.group();
-    this.m_mobs.add(new Mob(this, 0, 30, "mob1", "mob1_anim", 10, 0.9));
     this.m_mobEvents = [];
-    addMobEvents(this, 3000, "mob2", "mob2_anim", 10, 0.9);
+    // init first mob event
+    addMobEvents(this, 1000, "mob1", "mob1_anim", 5, 0.9);
 
     // Attacks
     this.m_weaponDynamic = this.physics.add.group();
@@ -66,8 +66,7 @@ export default class PlayingScene extends Phaser.Scene {
 
     // UI
     this.m_topBar = new TopBar(this);
-    this.m_expBar = new ExpBar(this, 50);    
-    
+    this.m_expBar = new ExpBar(this, 50);
 
     /** 몹과 플레이어 및 공격 충돌 이벤트 구현 */
     // Player와 mob이 부딪혔을 경우 player에 데미지 10을 줍니다.
@@ -145,6 +144,29 @@ export default class PlayingScene extends Phaser.Scene {
   afterLevelUp() {
     this.m_topBar.gainLevel();
     this.m_nextLevelSound.play();
+
+    switch (this.m_topBar.m_level) {
+      case 2:
+        removeOldestMobEvent(this);
+        addMobEvents(this, 800, "mob2", "mob2_anim", 15, 0.8);
+        setBackground(this, "background2");
+        break;
+      case 3:
+        removeOldestMobEvent(this);
+        addMobEvents(this, 600, "mob3", "mob3_anim", 25, 0.7);
+        setBackground(this, "background3");
+        break;
+      case 4:
+        removeOldestMobEvent(this);
+        addMobEvents(this, 400, "mob4", "mob4_anim", 40, 0.6);
+        break;
+      case 5:
+        removeOldestMobEvent(this);
+        addMobEvents(this, -1, "lion", "lion_anim", 60, 0.5);
+        break;
+      default:
+        break;
+    }
   }
 
   movePlayerManager() {
