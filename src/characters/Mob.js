@@ -71,7 +71,10 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
       this.flipX = false;
     }
 
-    if (this.m_hp <= 0 && !this.m_isDead) {
+    if (
+      (this.m_hp <= 0 && !this.m_isDead) ||
+      (isNaN(this.m_hp) && !this.m_isDead)
+    ) {
       this.die();
     }
   }
@@ -96,7 +99,7 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
     // 충돌 시 사운드 재생
     this.scene.m_hitMobSound.play();
     // 데미지 적용
-    this.m_hp -= damage;
+    this.m_hp -= damage;    
     // 히트 이펙트 투명도를 조절하여 데미지를 받음을 나타냄
     this.displayHit();
     this.getCoolDown();
@@ -106,10 +109,12 @@ export default class Mob extends Phaser.Physics.Arcade.Sprite {
   displayHit() {
     if (this.texture.key === "lion") return;
     this.alpha = 0.5;
+    this.setTint(0xff0000);
     this.scene.time.addEvent({
-      delay: 100,
+      delay: 200,
       callback: () => {
         this.alpha = 1;
+        this.clearTint();
       },
       loop: false,
     });

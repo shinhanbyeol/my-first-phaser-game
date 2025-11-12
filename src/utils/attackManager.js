@@ -23,7 +23,7 @@ export function addAttackEvents(scene, attackType, damage, scale, cooldown) {
       });
       scene.m_attackEvents[attackType] = {
         timer,
-        damage,
+        m_damage: damage,
         scale,
         cooldown,
       };
@@ -113,8 +113,9 @@ export function setAttackDamage(scene, attackType, newDamage) {
  * @description scene에 있는 attackType 공격의 scale을 재설정해주는 함수입니다.
  */
 export function setAttackScale(scene, attackType, newScale) {
-  const damage = scene.m_attackEvents[attackType].damage;
-  const cooldown = scene.m_attackEvents[attackType].cooldown;
+  const damage = scene.m_attackEvents[attackType].m_damage;
+  const cooldown =
+    attackType === "Catnip" ? null : scene.m_attackEvents[attackType].cooldown;
   removeAttack(scene, attackType);
   addAttackEvents(scene, attackType, damage, newScale, cooldown);
 }
