@@ -70,7 +70,7 @@ function clawAttack(scene, isHeadingRight, damage, scale) {
   );
   // 뒤쪽 공격, 앞쪽 공격, 뒤쪽 공격 사이의 시간 간격은 0.5s로 설정했습니다.
   scene.time.addEvent({
-    delay: 500,
+    delay: 300,
     callback: () => {
       new Claw(
         scene,
@@ -88,6 +88,8 @@ function clawAttack(scene, isHeadingRight, damage, scale) {
  * @description scene에 있는 attackType의 공격을 제거해주는 함수입니다.
  */
 export function removeAttack(scene, attackType) {
+  if (!scene.m_attackEvents[attackType]) return;
+
   // catnip의 경우 object를 제거합니다.
   if (attackType === "Catnip") {
     scene.m_attackEvents[attackType].destroy();

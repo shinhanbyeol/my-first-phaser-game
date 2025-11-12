@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import Config from "../Config";
 import Button from "../ui/Button";
-import { getTimeString } from "../utils/time";
+import { getTimeString } from "../ui/time";
 
 export default class GameClearScene extends Phaser.Scene {
   constructor() {

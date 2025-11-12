@@ -9,3 +9,12 @@ export function loseGame(scene) {
     secondElapsed: scene.m_secondElapsed,
   });
 }
+
+export function winGame(scene) {
+  scene.m_gameClearSound.play();
+  scene.scene.start("gameClearScene", {
+    mobsKilled: scene.m_topBar.m_mobsKilled,
+    level: scene.m_topBar.m_level,
+    secondElapsed: scene.m_secondElapsed,
+  });
+}

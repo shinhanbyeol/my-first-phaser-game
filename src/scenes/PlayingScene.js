@@ -3,9 +3,13 @@ import Config from "../Config";
 import TopBar from "../ui/TopBar";
 import ExpBar from "../ui/ExpBar";
 import Player from "../characters/Player";
-import Mob from "../characters/Mob";
+// import Mob from "../characters/Mob";
 import { setBackground } from "../utils/backgroundManager";
-import { addMobEvents, removeOldestMobEvent } from "../utils/mobManager";
+import {
+  addMob,
+  addMobEvents,
+  removeOldestMobEvent,
+} from "../utils/mobManager";
 import {
   addAttackEvents,
   setAttackDamage,
@@ -58,7 +62,7 @@ export default class PlayingScene extends Phaser.Scene {
     this.m_weaponDynamic = this.physics.add.group();
     this.m_weaponStatic = this.physics.add.group();
     this.m_attackEvents = {};
-    addAttackEvents(this, "Claw", 10, 2.3, 1500);
+    addAttackEvents(this, "Claw", 50, 2.3, 1200);   
 
     // Items
     this.m_expUps = this.physics.add.group();
@@ -164,14 +168,14 @@ export default class PlayingScene extends Phaser.Scene {
         break;
       case 3:
         removeOldestMobEvent(this);
-        addMobEvents(this, 600, "mob3", "mob3_anim", 25, 0.7);
-        setBackground(this, "background3");
+        addMobEvents(this, 600, "mob3", "mob3_anim", 25, 0.7);        
         // catnip 공격 추가
         addAttackEvents(this, "Catnip", 10, 2);
         break;
       case 4:
         removeOldestMobEvent(this);
         addMobEvents(this, 400, "mob4", "mob4_anim", 40, 0.6);
+        setBackground(this, "background3");
         // catnip 공격 크기 확대
         setAttackScale(this, "Catnip", 3);
         break;
@@ -179,12 +183,17 @@ export default class PlayingScene extends Phaser.Scene {
         // claw 공격 삭제
         removeAttack(this, "Claw");
         // beam 공격 추가
-        addAttackEvents(this, "Beam", 10, 1, 1000);
+        addAttackEvents(this, "Beam", 20, 1, 1000);
         break;
       case 6:
         // beam 공격 크기 및 데미지 확대
         setAttackScale(this, "Beam", 2);
         setAttackDamage(this, "Beam", 40);
+        break;
+      case 7:
+        // boss mob 추가
+        addMob(this, "lion", "lion_anim", 100);
+        setBackground(this, "background1");
         break;
       default:
         break;
@@ -236,7 +245,7 @@ export default class PlayingScene extends Phaser.Scene {
     this.m_player.m_hp = this.m_player.m_maxHp;
     this.m_player.m_exp = 0;
     this.m_player.setPosition(Config.width / 2, Config.height / 2);
-    // mob 이벤트들 초기화    
+    // mob 이벤트들 초기화
     this.m_mobEvents = [];
     // 공격 이벤트들 초기화
     this.m_attackEvents = {};
